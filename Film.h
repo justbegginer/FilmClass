@@ -3,6 +3,7 @@
 //
 #include <iostream>
 #include <string>
+
 #pragma once
 #ifndef UDIN7_FILM_H
 #define UDIN7_FILM_H
@@ -16,8 +17,12 @@ private:
     int realise_year;
     std::string genre;
 public:
+    Film();
+
     Film(const std::string &name, const std::string &dirName, const std::string &scName, int realiseYear,
          const std::string &genre);
+
+    Film(Film const &film);
 
     const std::string &getName() const;
 

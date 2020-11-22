@@ -4,9 +4,27 @@
 
 #include "Film.h"
 
+Film::Film(const Film &film) {
+    name = film.name;
+    realise_year = film.realise_year;
+    dir_name = film.dir_name;
+    sc_name = film.sc_name;
+    genre = film.genre;
+
+}
+
+Film::Film() {
+    name = "Fight club";
+    realise_year = 1999;
+    sc_name = "Chuck Palanic";
+    dir_name = "David Fincher";
+    genre = "drama ,triller";
+}
+
 Film::Film(const std::string &name, const std::string &dirName, const std::string &scName, int realiseYear,
            const std::string &genre) : name(name), dir_name(dirName), sc_name(scName), realise_year(realiseYear),
                                        genre(genre) {}
+
 
 const std::string &Film::getName() const {
     return name;
