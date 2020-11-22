@@ -39,6 +39,13 @@ public:
 
     void setGenre(const std::string &genre);
 
+    bool operator<(const Film &rhs) const;
+
+    bool operator>(const Film &rhs) const;
+
+    bool operator<=(const Film &rhs) const;
+
+    bool operator>=(const Film &rhs) const;
 };
 
 

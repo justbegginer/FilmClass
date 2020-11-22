@@ -48,4 +48,18 @@ void Film::setGenre(const std::string &genre) {
     Film::genre = genre;
 }
 
+bool Film::operator<(const Film &rhs) const {
+    return realise_year < rhs.realise_year;
+}
 
+bool Film::operator>(const Film &rhs) const {
+    return realise_year > rhs.realise_year;
+}
+
+bool Film::operator<=(const Film &rhs) const {
+    return !(*this > rhs);
+}
+
+bool Film::operator>=(const Film &rhs) const {
+    return !(*this < rhs);
+}
