@@ -10,7 +10,6 @@ Film::Film(const Film &film) {
     dir_name = film.dir_name;
     sc_name = film.sc_name;
     genre = film.genre;
-
 }
 
 Film::Film() {
@@ -80,4 +79,12 @@ bool Film::operator<=(const Film &rhs) const {
 
 bool Film::operator>=(const Film &rhs) const {
     return !(*this < rhs);
+}
+
+bool Film::operator==(const Film &rhs) const {
+    return rhs.sc_name == sc_name && rhs.dir_name == dir_name && rhs.name == name && rhs.realise_year == realise_year;
+}
+
+bool Film::operator!=(const Film &rhs) const {
+    return !(rhs == *this);
 }

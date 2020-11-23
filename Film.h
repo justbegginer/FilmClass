@@ -51,6 +51,10 @@ public:
     bool operator<=(const Film &rhs) const;
 
     bool operator>=(const Film &rhs) const;
+
+    bool operator==(const Film &rhs) const;
+
+    bool operator!=(const Film &rhs) const;
 };
 
 
