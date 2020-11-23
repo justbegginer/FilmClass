@@ -17,7 +17,7 @@ Film::Film() {
     realise_year = 1999;
     sc_name = "Chuck Palanic";
     dir_name = "David Fincher";
-    genre = "drama ,triller";
+    genre = "drama,thriller";
 }
 
 Film::Film(const std::string &name, const std::string &dirName, const std::string &scName, int realiseYear,
@@ -82,9 +82,18 @@ bool Film::operator>=(const Film &rhs) const {
 }
 
 bool Film::operator==(const Film &rhs) const {
-    return rhs.sc_name == sc_name && rhs.dir_name == dir_name && rhs.name == name && rhs.realise_year == realise_year;
+    return rhs.sc_name == sc_name && rhs.dir_name == dir_name && rhs.name == name && rhs.realise_year == realise_year && rhs.genre == genre;
 }
 
 bool Film::operator!=(const Film &rhs) const {
     return !(rhs == *this);
+}
+
+Film &Film::operator=(const Film &rhs) {
+    realise_year = rhs.realise_year;
+    dir_name = rhs.dir_name;
+    sc_name = rhs.sc_name;
+    name = rhs.name;
+    genre = rhs.genre;
+    return  *(this);
 }
