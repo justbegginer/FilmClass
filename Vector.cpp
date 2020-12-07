@@ -26,7 +26,7 @@ Vector::Vector(const Vector &vector) {
     }
 }
 
-void Vector::push(Film& film) {
+void Vector::push(Film film) {
     expand();
     *(films + length - 1) = film;
 }
@@ -59,4 +59,9 @@ void Vector::expand() {
     length ++;
     delete [] films;
     films = new_films;
+}
+
+Vector &Vector::operator=(Vector another) {
+    delete [] this;
+    return another;
 }
