@@ -9,14 +9,14 @@
 
 class Vector {
 private:
-    Film *film;
+    Film *films;
     int length;
     void expand();
 public:
     Vector();
-    Vector(Film *routes , int length);
+    Vector(Film *films , int length);
     Vector(const Vector &vector);
-    void push(Film& busRoute);
+    void push(Film& films);
     Film pop();
     Film& operator[](int index);
     int size();
