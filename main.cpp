@@ -8,6 +8,7 @@
 void insert_Film(Vector &films, int index, const Film &inserting);
 
 int main() {
+    auto films = Vector();
 
     return 0;
 }
@@ -39,6 +40,59 @@ void insert_Film(Vector &films, int index, const Film &inserting) {
         last = temp;
     }
     films.push(last);
+}
+void make_Film_from_file_data(std::ifstream &file , Vector films){
+    std::string temp;
+    std::getline(file, temp);
+    int length = std::stoi(temp);
+    for (int i = 0; i < length; i++) {
+        std::getline(file, temp);
+        for (int j = 0; j < temp.size();) {
+            std::string film_name = "";
+            for (;; j++) {
+                try {
+                    std::string one_symbol_string = temp[i] + "";
+                    std::stoi(one_symbol_string);
+                    break;
+                }
+                catch (std::invalid_argument) {
+                    if (temp[i] != ' ') {
+                        film_name += temp[i];
+                    }
+                }
+            }
+            films[i].setName(film_name);
+            std::string date = "";
+            for (; temp[j] != ' '; j++) {
+                date += temp[j];
+            }
+            films[i].setRealiseYear(std::stoi(date));
+            std::string genre = "";
+            j++;
+            for (; temp[j] != ' '; j++) {
+                genre += temp[j];
+            }
+            films[i].setGenre(genre);
+            std::string dir_name = "";
+            bool was_whitespase = false;
+            while (true) {
+                j++;
+                if (temp[j] == ' ') {
+                    if (was_whitespase)
+                        break;
+                    else
+                        was_whitespase = true;
+                }
+                dir_name += temp[j];
+            }
+            films[i].setDirName(dir_name);
+            std::string sc_name = "";
+            for (; j != temp.size(); ++j) {
+                sc_name += temp[j];
+            }
+            films[i].setScName(sc_name);
+        }
+    }
 }
 
 void table(Vector &vector) {
