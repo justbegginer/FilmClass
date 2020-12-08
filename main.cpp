@@ -5,15 +5,34 @@
 #include "map"
 #include <fstream>
 
+void sort_Films_by_date(Vector &films);
+
 void insert_Film(Vector &films, int index, const Film &inserting);
+
+void make_Film_from_file_data(std::ifstream &file, Vector films);
+
+void table(Vector &vector);
+
+void is_correct_mans_name(std::string str);
+
+void is_correct_date(std::string date);
+
+void is_correct_genre(std::string genre);
+
+void is_correct_film_name(std::string name);
+
+typedef std::invalid_argument invalid;
 
 int main() {
     auto films = Vector();
-
+    std::ifstream input("/home/raspberry/CLionProjects/FilmClass/input");
+    make_Film_from_file_data(input, films);
+    sort_Films_by_date(films);
+    table(films);
     return 0;
 }
 
-void sort_Films_by_date(Vector &films, int length) {
+void sort_Films_by_date(Vector &films) {
     Vector *new_films = new Vector();
     insert_Film(*new_films, 0, films[0]);
     if ((*new_films)[0] > films[1]) {
@@ -21,7 +40,7 @@ void sort_Films_by_date(Vector &films, int length) {
     } else {
         insert_Film(*new_films, 1, films[1]);
     }
-    for (int i = 2; i < length; ++i) {
+    for (int i = 2; i < films.size(); ++i) {
         for (int j = 0; j < i; ++j) {
             if ((*new_films)[j] > films[i]) {
                 insert_Film(*new_films, j, films[i]);
@@ -41,57 +60,55 @@ void insert_Film(Vector &films, int index, const Film &inserting) {
     }
     films.push(last);
 }
-void make_Film_from_file_data(std::ifstream &file , Vector films){
+
+void make_Film_from_file_data(std::ifstream &file, Vector films) {
     std::string temp;
-    std::getline(file, temp);
-    int length = std::stoi(temp);
-    for (int i = 0; i < length; i++) {
+    for (int i = 0;; i++) {
+        films.push(Film());
         std::getline(file, temp);
-        for (int j = 0; j < temp.size();) {
-            std::string film_name = "";
-            for (;; j++) {
-                try {
-                    std::string one_symbol_string = temp[i] + "";
-                    std::stoi(one_symbol_string);
-                    break;
+        if (temp == "")
+            break;
+        std::string date = "";
+        std::string film_name = "";
+        std::string genre = "";
+        std::string dir_name = "";
+        std::string sc_name = "";
+        try {
+            for (int j = 0; j < temp.size();) {
+                for (; !(temp[j] >= '0' && temp[j] <= '9'); j++) {
+                    film_name += temp[j];
                 }
-                catch (std::invalid_argument) {
-                    if (temp[i] != ' ') {
-                        film_name += temp[i];
-                    }
+                for (; temp[j] != ' '; j++) {
+                    date += temp[j];
                 }
-            }
-            films[i].setName(film_name);
-            std::string date = "";
-            for (; temp[j] != ' '; j++) {
-                date += temp[j];
-            }
-            films[i].setRealiseYear(std::stoi(date));
-            std::string genre = "";
-            j++;
-            for (; temp[j] != ' '; j++) {
-                genre += temp[j];
-            }
-            films[i].setGenre(genre);
-            std::string dir_name = "";
-            bool was_whitespase = false;
-            while (true) {
                 j++;
-                if (temp[j] == ' ') {
-                    if (was_whitespase)
-                        break;
-                    else
-                        was_whitespase = true;
+                for (; temp[j] != ' '; j++) {
+                    genre += temp[j];
                 }
-                dir_name += temp[j];
+                bool was_whitespase = false;
+                while (true) {
+                    j++;
+                    if (temp[j] == ' ') {
+                        if (was_whitespase)
+                            break;
+                        else
+                            was_whitespase = true;
+                    }
+                    dir_name += temp[j];
+                }
+                for (; j != temp.size(); ++j) {
+                    sc_name += temp[j];
+                }
             }
-            films[i].setDirName(dir_name);
-            std::string sc_name = "";
-            for (; j != temp.size(); ++j) {
-                sc_name += temp[j];
-            }
-            films[i].setScName(sc_name);
         }
+        catch (...) {
+            throw invalid("lost parameter or part of people name");
+        }
+        films[i].setName(film_name);
+        films[i].setGenre(genre);
+        films[i].setRealiseYear(std::stoi(date));
+        films[i].setDirName(dir_name);
+        films[i].setScName(sc_name);
     }
 }
 
@@ -104,7 +121,7 @@ void table(Vector &vector) {
             map[vector[i].getGenre()] = vector[i].getName();
             keys.push_back(vector[i].getGenre());
         } else {
-            map[vector[i].getGenre()] +="," + vector[i].getName();
+            map[vector[i].getGenre()] += "," + vector[i].getName();
         }
     }
     for (int i = 0; i < keys.size(); ++i) {
@@ -117,13 +134,13 @@ void table(Vector &vector) {
     }
     std::fstream table_writer("genresTable");
     std::string headers = "";
-    for (int i = 0; i < max_second_colon_size+max_first_colon_size+7; ++i) {
+    for (int i = 0; i < max_second_colon_size + max_first_colon_size + 7; ++i) {
         headers += "-";
     }
-    table_writer << headers<< "\n";
+    table_writer << headers << "\n";
     headers = "| genre";
     for (int i = 0; i < max_first_colon_size - 5 + 1; ++i) {
-        headers +=  " ";
+        headers += " ";
     }
     headers += "| films";
     for (int i = 0; i < max_second_colon_size - 5 + 1; ++i) {
@@ -150,11 +167,7 @@ void table(Vector &vector) {
     }
     std::string end_line = "";
     for (int i = 0; i < max_second_colon_size + max_first_colon_size + 7; ++i) {
-        end_line+="-";
+        end_line += "-";
     }
-    table_writer << end_line <<"\n";
-}
-
-void is_correct_mans_name(std::string str) {
-
+    table_writer << end_line << "\n";
 }
