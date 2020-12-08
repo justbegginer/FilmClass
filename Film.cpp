@@ -89,11 +89,17 @@ bool Film::operator!=(const Film &rhs) const {
     return !(rhs == *this);
 }
 
-Film &Film::operator=(const Film &rhs) {
+Film &Film::operator=(Film rhs) {
     realise_year = rhs.realise_year;
     dir_name = rhs.dir_name;
     sc_name = rhs.sc_name;
     name = rhs.name;
     genre = rhs.genre;
     return  *(this);
+}
+
+std::ostream &operator<<(std::ostream &os, const Film &film) {
+    os << "name: " << film.name << " dir_name: " << film.dir_name << " sc_name: " << film.sc_name << " realise_year: "
+       << film.realise_year << " genre: " << film.genre;
+    return os;
 }

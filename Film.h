@@ -56,7 +56,9 @@ public:
 
     bool operator!=(const Film &rhs) const;
 
-    Film &operator=(const Film &rhs);
+    Film &operator=( Film rhs);
+
+    friend std::ostream &operator<<(std::ostream &os, const Film &film);
 };
 
 
