@@ -4,22 +4,7 @@
 #include "vector"
 #include "map"
 #include <fstream>
-
-void sort_Films_by_date(Vector &films);
-
-void insert_Film(Vector &films, int index, const Film &inserting);
-
-void make_Film_from_file_data(std::ifstream &file, Vector films);
-
-void table(Vector &vector);
-
-void is_correct_mans_name(std::string str);
-
-void is_correct_date(std::string date);
-
-void is_correct_genre(std::string genre);
-
-void is_correct_film_name(std::string name);
+#include "mainHeaders.h"
 
 typedef std::invalid_argument invalid;
 
@@ -104,6 +89,11 @@ void make_Film_from_file_data(std::ifstream &file, Vector films) {
         catch (...) {
             throw invalid("lost parameter or part of people name");
         }
+        is_correct_date(date);
+        is_correct_film_name(film_name);
+        is_correct_genre(genre);
+        is_correct_mans_name(dir_name);
+        is_correct_mans_name(sc_name);
         films[i].setName(film_name);
         films[i].setGenre(genre);
         films[i].setRealiseYear(std::stoi(date));
@@ -170,4 +160,54 @@ void table(Vector &vector) {
         end_line += "-";
     }
     table_writer << end_line << "\n";
+}
+
+typedef std::invalid_argument invalid;
+
+void is_correct_mans_name(std::string str) {
+    int i = 0;
+    if (str.size() < 7)
+        throw invalid("invalid man's name");
+    for (; str[i] != ' '; ++i) {
+        if (i > 3)
+            throw std::invalid_argument("invalid man's name");
+        if (i % 2 == 0) {
+            if (!(str[i] >= 'A' && str[i] <= 'Z'))
+                throw invalid("invalid man's name");
+        } else {
+            if (str[i] != '.')
+                throw invalid("invalid man's name");
+        }
+    }
+    i++;
+    for (; i < str.size(); ++i) {
+        if (!((str[i] >= 'a' && str[i] <= 'z') || (str[i] >= 'A' && str[i] <= 'Z')))
+            throw invalid ("invalid man's name");
+    }
+}
+
+void is_correct_date(std::string date){
+    int int_date;
+    try {
+        int_date = std::stoi(date);
+    }
+    catch (invalid) {
+        throw invalid ("date is not a number");
+    }
+    if (int_date < 1895 || int_date > 2020)
+        throw invalid("absurd film date");
+}
+
+void is_correct_genre(std::string genre){
+    for (char i : genre) {
+        if (!((i >='a' && i<='z')||(i >='A' && i <= 'Z')))
+            throw invalid("wrong genre name");
+    }
+}
+
+void is_correct_film_name(std::string name){
+    for(char i : name){
+        if (!((i >='a' && i<='z')||(i >='A' && i <= 'Z') || i != '-' | i != ' '))
+            throw invalid ("invalid film name");
+    }
 }
