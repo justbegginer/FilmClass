@@ -62,6 +62,14 @@ void Vector::expand() {
 }
 
 Vector &Vector::operator=(Vector another) {
-    delete [] this;
-    return another;
+    for(int i = 0 ; i < another.size() ; i++){
+        if (i < this->size()-1){
+           (*this)[i] = another[i];
+        }
+        else{
+            this->push(another[i]);
+        }
+    }
+    this->length = another.length;
+    return *this;
 }
