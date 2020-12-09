@@ -77,8 +77,8 @@ bool Film::operator<=(const Film &rhs) const {
     return !(*this > rhs);
 }
 
-bool Film::operator>=(const Film &rhs) const {
-    return !(*this < rhs);
+bool operator>=(const Film &this_film ,const Film &rhs) {
+    return !(this_film < rhs);
 }
 
 bool Film::operator==(const Film &rhs) const {

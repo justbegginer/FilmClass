@@ -50,7 +50,7 @@ public:
 
     bool operator<=(const Film &rhs) const;
 
-    bool operator>=(const Film &rhs) const;
+    friend bool operator>=(const Film &this_film ,const Film &rhs);
 
     bool operator==(const Film &rhs) const;
 
