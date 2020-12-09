@@ -17,7 +17,7 @@ Film::Film() {
     realise_year = 1999;
     sc_name = "Chuck Palanic";
     dir_name = "David Fincher";
-    genre = "drama,thriller";
+    genre = "drama";
 }
 
 Film::Film(const std::string &name, const std::string &dirName, const std::string &scName, int realiseYear,
