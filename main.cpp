@@ -12,47 +12,39 @@ int main() {
     auto films = Vector();
     std::ifstream input("/home/raspberry/CLionProjects/FilmClass/input");
     make_Film_from_file_data(input, films);
+    films.push(Film());
+    for (int i = 0; i < films.size(); ++i) {
+        std::cout << films[i] << "\n";
+    }
+    std::cout << "sorted\n";
     sort_Films_by_date(films);
+    for (int i = 0; i < films.size(); i++) {
+        std::cout << films[i] << "\n";
+    }
     table(films);
     return 0;
 }
 
 void sort_Films_by_date(Vector &films) {
-    Vector *new_films = new Vector();
-    insert_Film(*new_films, 0, films[0]);
-    if ((*new_films)[0] > films[1]) {
-        insert_Film(*new_films, 0, films[1]);
-    } else {
-        insert_Film(*new_films, 1, films[1]);
-    }
-    for (int i = 2; i < films.size(); ++i) {
-        for (int j = 0; j < i; ++j) {
-            if ((*new_films)[j] > films[i]) {
-                insert_Film(*new_films, j, films[i]);
-            }
+    for (int i = 0; i < films.size(); ++i) {
+        int j = i - 1;
+        for (; j >= 0 && (films[j] > films[i]); --j) {
+            Film temp = Film(films[j]);
+            films[j] = films[i];
+            films[i] = temp;
+            i--;
         }
     }
-    films = *new_films;
 }
 
-void insert_Film(Vector &films, int index, const Film &inserting) {
-    Film last(films[index]);
-    films[index] = inserting;
-    for (int i = index + 1; i < films.size() - 1; ++i) {
-        Film temp(films[i]);
-        films[i] = last;
-        last = temp;
-    }
-    films.push(last);
-}
 
-void make_Film_from_file_data(std::ifstream &file, Vector films) {
+void make_Film_from_file_data(std::ifstream &file, Vector &films) {
     std::string temp;
     for (int i = 0;; i++) {
-        films.push(Film());
         std::getline(file, temp);
         if (temp == "")
             break;
+        films.push(Film());
         std::string date = "";
         std::string film_name = "";
         std::string genre = "";
@@ -81,6 +73,7 @@ void make_Film_from_file_data(std::ifstream &file, Vector films) {
                     }
                     dir_name += temp[j];
                 }
+                j++;
                 for (; j != temp.size(); ++j) {
                     sc_name += temp[j];
                 }
@@ -122,7 +115,8 @@ void table(Vector &vector) {
             max_second_colon_size = map[keys[i]].size();
         }
     }
-    std::fstream table_writer("genresTable");
+    std::fstream table_writer("/home/raspberry/CLionProjects/FilmClass/genresTable");
+    table_writer.clear();
     std::string headers = "";
     for (int i = 0; i < max_second_colon_size + max_first_colon_size + 7; ++i) {
         headers += "-";
@@ -160,9 +154,8 @@ void table(Vector &vector) {
         end_line += "-";
     }
     table_writer << end_line << "\n";
+    table_writer.close();
 }
-
-typedef std::invalid_argument invalid;
 
 void is_correct_mans_name(std::string str) {
     int i = 0;
@@ -182,32 +175,32 @@ void is_correct_mans_name(std::string str) {
     i++;
     for (; i < str.size(); ++i) {
         if (!((str[i] >= 'a' && str[i] <= 'z') || (str[i] >= 'A' && str[i] <= 'Z')))
-            throw invalid ("invalid man's name");
+            throw invalid("invalid man's name " + std::to_string(i));
     }
 }
 
-void is_correct_date(std::string date){
+void is_correct_date(std::string date) {
     int int_date;
     try {
         int_date = std::stoi(date);
     }
     catch (invalid) {
-        throw invalid ("date is not a number");
+        throw invalid("date is not a number");
     }
     if (int_date < 1895 || int_date > 2020)
         throw invalid("absurd film date");
 }
 
-void is_correct_genre(std::string genre){
+void is_correct_genre(std::string genre) {
     for (char i : genre) {
-        if (!((i >='a' && i<='z')||(i >='A' && i <= 'Z')))
+        if (!((i >= 'a' && i <= 'z') || (i >= 'A' && i <= 'Z')))
             throw invalid("wrong genre name");
     }
 }
 
-void is_correct_film_name(std::string name){
-    for(char i : name){
-        if (!((i >='a' && i<='z')||(i >='A' && i <= 'Z') || i != '-' | i != ' '))
-            throw invalid ("invalid film name");
+void is_correct_film_name(std::string name) {
+    for (char i : name) {
+        if (!((i >= 'a' && i <= 'z') || (i >= 'A' && i <= 'Z') || i != '-' | i != ' '))
+            throw invalid("invalid film name");
     }
 }
